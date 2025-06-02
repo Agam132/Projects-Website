@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generator Prompt Video AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Menggunakan @import untuk Google Fonts: Poppins (untuk judul) dan Inter (untuk teks tubuh) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif; /* Font default untuk teks tubuh */
+        }
+        h1, h2 {
+            font-family: 'Poppins', sans-serif; /* Font untuk judul */
+        }
+
+        /* Custom styles for modern focus and interaction */
+        textarea, input[type="radio"] + span {
+            transition: all 0.2s ease-in-out;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #8B5CF6; /* purple-500 */
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.3); /* purple-500 with opacity */
+        }
+
+        /* Custom radio button styling */
+        input[type="radio"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: 2px solid #D1D5DB; /* gray-300 */
+            border-radius: 50%;
+            width: 1.25rem; /* w-5 */
+            height: 1.25rem; /* h-5 */
+            margin-right: 0.5rem; /* ml-2 */
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease-in-out;
+        }
+
+        input[type="radio"]:checked {
+            background-color: #8B5CF6; /* purple-500 */
+            border-color: #8B5CF6; /* purple-500 */
+        }
+
+        input[type="radio"]:checked::before {
+            content: '';
+            display: block;
+            width: 0.5rem; /* smaller dot */
+            height: 0.5rem; /* smaller dot */
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        input[type="radio"]:focus {
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.4); /* purple-500 with opacity */
+        }
+
+        /* Button hover effect */
+        #generateButton, #copyButton {
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        #generateButton:hover, #copyButton:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Ensure body takes full height for footer positioning */
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Pushes content to top, footer to bottom */
+        }
+        .main-content-wrapper {
+            flex-grow: 1; /* Allows main content to take available space */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem; /* p-4 sm:p-8 */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-indigo-900">
+
+    <div class="main-content-wrapper">
+        <div class="bg-white p-6 sm:p-10 rounded-2xl shadow-2xl w-full max-w-3xl transform transition-all duration-300 hover:scale-[1.01] border border-purple-300">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-center text-gray-900 mb-6 leading-tight">
+                Generator Prompt Video AI
+            </h1>
+            <p class="text-center text-gray-600 mb-10 max-w-md mx-auto text-lg">
+                Masukkan ide prompt Anda, pilih platform, dan biarkan AI memperluasnya menjadi prompt video yang detail dan kreatif.
+            </p>
+
+            <div class="mb-8">
+                <label for="promptIdea" class="block text-gray-800 text-xl font-semibold mb-3">
+                    Ide Prompt Anda:
+                </label>
+                <textarea
+                    id="promptIdea"
+                    class="w-full p-4 border border-gray-300 rounded-lg focus:ring-4 focus:ring-purple-500 focus:border-transparent transition duration-200 text-gray-800 text-base resize-y min-h-[120px] shadow-sm"
+                    placeholder="Contoh: Kucing bermain dengan benang di ruang tamu yang cerah, gaya animasi 3D, pencahayaan hangat, sudut kamera rendah."
+                    rows="5"
+                ></textarea>
+            </div>
+
+            <div class="mb-10">
+                <label class="block text-gray-800 text-xl font-semibold mb-4">
+                    Pilih Platform Video:
+                </label>
+                <div class="flex flex-wrap gap-6">
+                    <label class="inline-flex items-center cursor-pointer text-gray-800 text-lg font-medium">
+                        <input
+                            type="radio"
+                            class="form-radio"
+                            name="platform"
+                            value="Kling AI"
+                            checked="checked"
+                        />
+                        <span>Kling AI</span>
+                    </label>
+                    <label class="inline-flex items-center cursor-pointer text-gray-800 text-lg font-medium">
+                        <input
+                            type="radio"
+                            class="form-radio"
+                            name="platform"
+                            value="PixVerse"
+                        />
+                        <span>PixVerse</span>
+                    </label>
+                    <label class="inline-flex items-center cursor-pointer text-gray-800 text-lg font-medium">
+                        <input
+                            type="radio"
+                            class="form-radio"
+                            name="platform"
+                            value="Umum/Lainnya"
+                        />
+                        <span>Umum/Lainnya</span>
+                    </label>
+                </div>
+            </div>
+
+            <button
+                id="generateButton"
+                class="w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:from-purple-700 hover:to-indigo-800 transition duration-300 ease-in-out transform flex items-center justify-center text-xl tracking-wide"
+            >
+                <svg id="spinner" class="animate-spin h-6 w-6 mr-3 text-white"></svg>
+                <span id="buttonText">Hasilkan Prompt Kreatif</span>
+                <svg id="generateIcon" class="h-7 w-7 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </button>
+
+            <div id="errorMessage" class="mt-8 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center font-medium shadow-md hidden">
+                </div>
+
+            <div id="generatedPromptArea" class="mt-10 hidden">
+                <label for="generatedPrompt" class="block text-gray-800 text-xl font-semibold mb-3">
+                    Prompt yang Dihasilkan:
+                </label>
+                <textarea
+                    id="generatedPrompt"
+                    class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 text-gray-800 text-base resize-y min-h-[180px]"
+                    readonly="readonly"
+                    rows="8"
+                ></textarea>
+                <button
+                    id="copyButton"
+                    class="mt-5 w-full bg-gradient-to-r from-teal-500 to-green-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:from-teal-600 hover:to-green-700 transition duration-300 ease-in-out transform flex items-center justify-center text-lg"
+                >
+                    <svg class="h-6 w-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                    </svg>
+                    Salin Prompt
+                </button>
+                <p id="copySuccessMessage" class="mt-3 text-center text-green-600 font-semibold hidden"></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="w-full text-center py-4">
+        <p class="text-gray-400 text-sm">Dibuat oleh Agam Saputra</p>
+    </footer>
+
+    <script type="text/javascript">
+    //<![CDATA[
+        document.addEventListener('DOMContentLoaded', () => {
+            const promptIdeaInput = document.getElementById('promptIdea');
+            const platformRadios = document.querySelectorAll('input[name="platform"]');
+            const generateButton = document.getElementById('generateButton');
+            const spinner = document.getElementById('spinner');
+            const buttonText = document.getElementById('buttonText');
+            const generateIcon = document.getElementById('generateIcon');
+            const errorMessage = document.getElementById('errorMessage');
+            const generatedPromptArea = document.getElementById('generatedPromptArea');
+            const generatedPromptTextarea = document.getElementById('generatedPrompt');
+            const copyButton = document.getElementById('copyButton');
+            const copySuccessMessage = document.getElementById('copySuccessMessage');
+
+            let selectedPlatform = 'Kling AI'; // Default value
+
+            // Memperbarui platform yang dipilih saat radio button berubah
+            platformRadios.forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    selectedPlatform = event.target.value;
+                });
+            });
+
+            // Fungsi untuk menampilkan pesan error
+            const showErrorMessage = (message) => {
+                errorMessage.textContent = message;
+                errorMessage.classList.remove('hidden');
+            };
+
+            // Fungsi untuk menyembunyikan pesan error
+            const hideErrorMessage = () => {
+                errorMessage.classList.add('hidden');
+            };
+
+            // Fungsi untuk menampilkan pesan sukses salin
+            const showCopySuccess = (message) => {
+                copySuccessMessage.textContent = message;
+                copySuccessMessage.classList.remove('hidden');
+                setTimeout(() => {
+                    copySuccessMessage.classList.add('hidden');
+                }, 2000); // Sembunyikan setelah 2 detik
+            };
+
+            // Handler untuk tombol "Hasilkan Prompt"
+            generateButton.addEventListener('click', async () => {
+                const promptIdea = promptIdeaInput.value.trim();
+
+                if (!promptIdea) {
+                    showErrorMessage('Ide prompt tidak boleh kosong.');
+                    return;
+                }
+
+                // Reset UI state
+                hideErrorMessage();
+                generatedPromptArea.classList.add('hidden');
+                generatedPromptTextarea.value = '';
+                copySuccessMessage.classList.add('hidden');
+
+                // Tampilkan loading state
+                generateButton.disabled = true;
+                spinner.classList.remove('hidden');
+                buttonText.textContent = 'Menghasilkan...';
+                generateIcon.classList.add('hidden');
+
+                try {
+                    // Konstruksi prompt untuk LLM
+                    const llmPrompt = `Kembangkan ide prompt video berikut untuk AI pembuatan video seperti ${selectedPlatform}. Sertakan detail tentang adegan, subjek, tindakan, lingkungan, pencahayaan, sudut kamera, dan gaya artistik. Buatlah ringkas dan deskriptif.\nIde pengguna: ${promptIdea}`;
+
+                    let chatHistory = [];
+                    chatHistory.push({ role: "user", parts: [{ text: llmPrompt }] });
+
+                    const payload = { contents: chatHistory };
+                    // GANTI DENGAN API KEY GEMINI ANDA YANG SEBENARNYA DI SINI
+                    const apiKey = "AIzaSyAJ5PIsTTfj8c41hyoX5mztKc7t68_3Bxg"; // <--- GANTI BAGIAN INI
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        generatedPromptTextarea.value = text;
+                        generatedPromptArea.classList.remove('hidden');
+                    } else {
+                        showErrorMessage('Gagal menghasilkan prompt. Respons tidak terduga.');
+                    }
+                } catch (err) {
+                    console.error('Error generating prompt:', err);
+                    showErrorMessage(`Terjadi kesalahan saat menghasilkan prompt: ${err.message}`);
+                } finally {
+                    // Sembunyikan loading state
+                    generateButton.disabled = false;
+                    spinner.classList.add('hidden');
+                    buttonText.textContent = 'Hasilkan Prompt Kreatif';
+                    generateIcon.classList.remove('hidden');
+                }
+            });
+
+            // Handler untuk tombol "Salin Prompt"
+            copyButton.addEventListener('click', () => {
+                const promptToCopy = generatedPromptTextarea.value;
+                if (promptToCopy) {
+                    // Menggunakan document.execCommand('copy') karena navigator.clipboard.writeText() mungkin bermasalah di iframe
+                    const textarea = document.createElement('textarea');
+                    textarea.value = promptToCopy;
+                    textarea.style.position = 'fixed'; // Hindari scrolling ke bawah
+                    textarea.style.opacity = 0; // Sembunyikan
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        showCopySuccess('Prompt berhasil disalin!');
+                    } catch (err) {
+                        console.error('Gagal menyalin prompt:', err);
+                        showErrorMessage('Gagal menyalin prompt ke clipboard.');
+                    } finally {
+                        document.body.removeChild(textarea);
+                    }
+                }
+            });
+        });
+    //]]>
+    </script>
+</body>
+</html>
